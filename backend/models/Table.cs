@@ -5,12 +5,14 @@ using System.Linq;
 namespace models{
     class Table
     {
+        public Guid id { get; set; }
         int numPartida { get; set; }
         int cantCartas { get; set; }
-        List <Player> jugadores = new List<Player>();
+        public List <Player> jugadores = new List<Player>();
 
         public Table ()
         {
+            this.id = Guid.NewGuid();
             this.numPartida = 0;
             this.cantCartas = 3;
         }
@@ -70,18 +72,13 @@ namespace models{
             }
         }
 
-        public Player SelectWinner()
+        public Player SelectHandWinner()
         {
             int maxPoder = -1;
             Player ganador = null;
 
             foreach (Player jugador in jugadores)
             {
-                if (jugadores.Any(j => j.cartaSeleccionada == null))
-                {
-                    Console.WriteLine("Hay jugadores que no tiraron carta.");
-                    return null;
-                }
                 if (jugador.cartaSeleccionada.poder > maxPoder)
                 {
                     maxPoder = jugador.cartaSeleccionada.poder;
@@ -120,6 +117,8 @@ namespace models{
 
             foreach (Player jugador in jugadores)
             {
+                jugador.cartaSeleccionada = null;
+                
                 if (jugador.turno == jugadores.Count())
                 {
                     jugador.turno = 1;
